@@ -32,6 +32,7 @@ from pathlib import Path
 
 import openai
 import typer
+import google.generativeai as genai
 
 from dotenv import load_dotenv
 
@@ -57,6 +58,7 @@ def load_env_if_needed():
         # if there is no .env file, try to load from the current working directory
         load_dotenv(dotenv_path=os.path.join(os.getcwd(), ".env"))
     openai.api_key = os.getenv("OPENAI_API_KEY")
+    genai.configure(api_key=os.getenv("GOOGLE_API_KEY"))
 
 
 def load_prompt(input_repo: DiskMemory, improve_mode):
@@ -90,7 +92,7 @@ def get_preprompts_path(use_custom_preprompts: bool, input_path: Path) -> Path:
 @app.command()
 def main(
     project_path: str = typer.Argument("projects/example", help="path"),
-    model: str = typer.Argument("gpt-4-1106-preview", help="model id string"),
+    model: str = typer.Argument("gemini-pro", help="model id string"),
     temperature: float = 0.1,
     improve_mode: bool = typer.Option(
         False,

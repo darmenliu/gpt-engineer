@@ -33,7 +33,7 @@ logger = logging.getLogger(__name__)
 class AI:
     def __init__(
         self,
-        model_name="gpt-4-1106-preview",
+        model_name="gemini-pro",
         temperature=0.1,
         azure_endpoint="",
         google_endpoint="",
@@ -225,27 +225,26 @@ class AI:
         BaseChatModel
             The created chat model.
         """
-        if self.azure_endpoint:
-            return AzureChatOpenAI(
-                openai_api_base=self.azure_endpoint,
-                openai_api_version=os.getenv("OPENAI_API_VERSION", "2023-05-15"),
-                deployment_name=self.model_name,
-                openai_api_type="azure",
-                streaming=self.streaming,
-            )
-
-        if self.google_endpoint:
-            return ChatGoogleGenerativeAI(
-                model=self.model_name,
-                temperature=self.temperature,
-            )
-
-        return ChatOpenAI(
+        # if self.azure_endpoint:
+        #     return AzureChatOpenAI(
+        #         openai_api_base=self.azure_endpoint,
+        #         openai_api_version=os.getenv("OPENAI_API_VERSION", "2023-05-15"),
+        #         deployment_name=self.model_name,
+        #         openai_api_type="azure",
+        #         streaming=self.streaming,
+        #     )
+        return ChatGoogleGenerativeAI(
             model=self.model_name,
             temperature=self.temperature,
-            streaming=self.streaming,
-            client=openai.ChatCompletion,
+            convert_system_message_to_human=True,
         )
+
+        # return ChatOpenAI(
+        #     model=self.model_name,
+        #     temperature=self.temperature,
+        #     streaming=self.streaming,
+        #     client=openai.ChatCompletion,
+        # )
 
 
 def serialize_messages(messages: List[Message]) -> str:
