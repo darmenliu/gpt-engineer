@@ -123,6 +123,13 @@ def main(
         help="""Endpoint for your Azure OpenAI Service (https://xx.openai.azure.com).
             In that case, the given model is the deployment name chosen in the Azure AI Studio.""",
     ),
+    google_endpoint: str = typer.Option(
+        "",
+        "--google",
+        "-g",
+        help="""Endpoint for your Google OpenAI Service (https://xx.openai.google.com).
+            In that case, the given model is the deployment name chosen in the Google AI Studio.""",
+    ),
     use_custom_preprompts: bool = typer.Option(
         False,
         "--use-custom-preprompts",
@@ -151,6 +158,7 @@ def main(
         model_name=model,
         temperature=temperature,
         azure_endpoint=azure_endpoint,
+        google_endpoint=google_endpoint,
     )
 
     # project_path = os.path.abspath(

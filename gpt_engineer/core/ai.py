@@ -12,6 +12,7 @@ import openai
 from langchain.callbacks.streaming_stdout import StreamingStdOutCallbackHandler
 from langchain.chat_models import AzureChatOpenAI, ChatOpenAI
 from langchain.chat_models.base import BaseChatModel
+from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain.schema import (
     AIMessage,
     HumanMessage,
@@ -35,6 +36,7 @@ class AI:
         model_name="gpt-4-1106-preview",
         temperature=0.1,
         azure_endpoint="",
+        google_endpoint="",
         streaming=True,
     ):
         """
@@ -53,6 +55,7 @@ class AI:
         self.streaming = streaming
         self.llm = self._create_chat_model()
         self.token_usage_log = TokenUsageLog(model_name)
+        self.google_endpoint = google_endpoint
 
         logger.debug(f"Using model {self.model_name}")
 
@@ -229,6 +232,12 @@ class AI:
                 deployment_name=self.model_name,
                 openai_api_type="azure",
                 streaming=self.streaming,
+            )
+
+        if self.google_endpoint:
+            return ChatGoogleGenerativeAI(
+                model=self.model_name,
+                temperature=self.temperature,
             )
 
         return ChatOpenAI(
